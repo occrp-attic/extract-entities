@@ -1,0 +1,23 @@
+sudo: required
+services:
+  - docker
+
+install:
+  - echo "${TRAVIS_BRANCH}"
+  - docker build -t alephdata/aleph-extract-entities .
+
+script:
+  # - docker run -ti alephdata/aleph-extract-entities pytest
+  - sleep 1
+
+after_success:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker tag alephdata/aleph-extract-entities alephdata/aleph-extract-entities:master
+  - docker push alephdata/aleph-extract-entities:master
+  - if [[ $TRAVIS_TAG = $TRAVIS_BRANCH ]]; then
+      docker push alephdata/aleph-extract-entities;
+      docker tag alephdata/aleph-extract-entities alephdata/aleph-extract-entities:$TRAVIS_TAG ;
+      docker push alephdata/aleph-extract-entities:$TRAVIS_TAG ;
+      docker tag alephdata/aleph-extract-entities alephdata/aleph-extract-entities:occrp ;
+      docker push alephdata/aleph-extract-entities:occrp ;
+    fi
