@@ -4,10 +4,9 @@ import time
 import spacy
 import logging
 from concurrent import futures
-from alephclient.services.entityextract_pb2_grpc import (
-    add_EntityExtractServicer_to_server, EntityExtractServicer
-)
-from alephclient.services.entityextract_pb2 import ExtractedEntity
+from servicelayer.rpc.entityextract_pb2 import ExtractedEntity
+from servicelayer.rpc.entityextract_pb2_grpc import EntityExtractServicer
+from servicelayer.rpc.entityextract_pb2_grpc import add_EntityExtractServicer_to_server  # noqa
 
 log = logging.getLogger('entityextractor')
 
