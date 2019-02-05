@@ -8,7 +8,7 @@ setup(
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
     include_package_data=True,
     install_requires=[
-        'alephclient'
+        'servicelayer == 0.1.4',
     ],
     zip_safe=False
 )

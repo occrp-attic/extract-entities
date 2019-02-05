@@ -3,8 +3,8 @@ services:
   - docker
 
 install:
-  - echo "${TRAVIS_BRANCH}"
-  - docker build -t alephdata/aleph-extract-entities .
+  - echo "${TRAVIS_BRANCH} ${TRAVIS_COMMIT}"
+  - docker build -t alephdata/aleph-extract-entities:$TRAVIS_COMMIT .
 
 script:
   # - docker run -ti alephdata/aleph-extract-entities pytest
@@ -12,12 +12,12 @@ script:
 
 after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker tag alephdata/aleph-extract-entities alephdata/aleph-extract-entities:master
-  - docker push alephdata/aleph-extract-entities:master
+  - docker tag alephdata/aleph-extract-entities:$TRAVIS_COMMIT
   - if [[ $TRAVIS_TAG = $TRAVIS_BRANCH ]]; then
-      docker push alephdata/aleph-extract-entities;
-      docker tag alephdata/aleph-extract-entities alephdata/aleph-extract-entities:$TRAVIS_TAG ;
+      docker tag alephdata/aleph-extract-entities:$TRAVIS_COMMIT alephdata/aleph-extract-entities:$TRAVIS_TAG ;
       docker push alephdata/aleph-extract-entities:$TRAVIS_TAG ;
-      docker tag alephdata/aleph-extract-entities alephdata/aleph-extract-entities:occrp ;
+    fi
+  - if [[ $TRAVIS_BRANCH = "occrp/production" ]]; then
+      docker tag alephdata/aleph-extract-entities:$TRAVIS_COMMIT alephdata/aleph-extract-entities:occrp ;
       docker push alephdata/aleph-extract-entities:occrp ;
     fi
